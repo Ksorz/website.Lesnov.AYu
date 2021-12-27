@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <!-- css -->
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/tasks.css">
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+	<div class="container-fluid main">
+
+		<div class="fixed-topbar header">
+			<div class="row">
+				<span class="logo">MyLogo</span>
+				<ul id="page-nav">
+					<li><a href="#">#</a></li>
+					<li><a href="index.html">Css</a></li>
+					<li><a href="taskFlex.html">Flex</a></li>
+					<li><a href="taskDom.html">Dom</a></li>
+					<li><a href="taskMenu.html">Menu</a></li>
+				</ul>
+			</div>
+		</div>
+
+			<hr class="blueLine">
+			<div id="taskCss" class="row taskCss">
+				<div class="col-md-12">
+					<br><br><br>
+					<h3>Задача Flex</h3>
+					<p><img src="images/taskFlex.png"></p>
+				</div>
+			</div>
+
+
+			<hr class="blueLine">
+			<div id="answer" class="row answer">
+				<div class="col-lg-12"><h3>Решение</h3></div>
+				<div class="col-md-12">
+					<div style="padding-left: 33%">
+					<table border="1">
+						<tr>
+							<td>
+								<div id="container">
+									<p id="actionText"></p>
+									<img id="action" class="action" src="picture/ilon1.png" style="">
+								</div>
+							</td>
+
+						</tr>
+					</table>
+					<br><br>
+					</div>
+
+					<script>
+						// статическое состояние
+						let action = document.getElementById('action');
+						let actionText = document.getElementById('actionText');
+
+						// при наведении мыши
+						action.onmouseover = function () {
+							const imgLinks = [
+								'picture/mini/mini-ilon2.png',
+							];
+							let currentIndex = 0;
+							setTimeout(function() {
+								action.style.opacity = "50%";
+								setTimeout(function() {
+									action.src = imgLinks[0];
+									actionText.innerHTML = "Как тебе такое?";
+									setTimeout(function() {
+										action.style.opacity = "100%";
+									}, 1000);
+								}, 1000);
+							}, 2000);
+						}
+						//при щелчке
+						action.onclick = function () {
+							action.src = "picture/ilon3.png";
+
+							const container = document.getElementById('container');
+							let t = setInterval(move, 1);
+							let pos = 1;
+
+							function move() {
+								action.style.left = pos + 'px';
+								action.style.bottom = pos + 'px';
+								pos++;
+								if (pos === 450) {
+									clearInterval(t)
+								}
+							}
+							// сепия
+							setTimeout(action0Go, 3000);
+						}
+						function action0Go() {
+							actionText.innerHTML = "Это еще не Тесла:)";
+							//возврат в стартовой состояние
+							action.classList.add('sepia');
+							setTimeout(function() {
+								action.src = "picture/mini/mini-ilon1.png";
+								action.classList.remove('sepia');
+								action.style.bottom = '0px';
+								action.style.left= '0px';
+								actionText.innerHTML = "";
+							}, 3000);
+						}
+					</script>
+				</div>
+			</div>
+
+
+			<a href="#" class="btn-scroll-top"><img id="img-go-up" src="images/up.png"></a>
+	</div>
+	<div class="row footer">
+		@2021
+	</div>
+</body>
+</html>
