@@ -19,7 +19,7 @@
 				<span class="logo">MyLogo</span>
 				<ul id="page-nav">
 					<li><a href="#">#</a></li>
-                    <li><a href="index.html">Main</a></li>
+					<li><a href="index.html">Main</a></li>
 					<li><a href="css.html">Рисунок CSS</a></li>
 					<li><a href="taskFlex.html">Flex</a></li>
 					<li><a href="taskDom.html">Dom</a></li>
@@ -28,97 +28,97 @@
 			</div>
 		</div>
 
-		<hr class="blueLine">
-		<div id="taskCss" class="row taskCss">
-			<div class="col-md-12">
-				<br><br><br>
-				<h3>Задача Flex</h3>
-				<p><img src="images/taskFlex.png"></p>
-			</div>
-		</div>
-
-
-		<hr class="blueLine">
-		<div id="answer" class="row answer">
-			<div class="col-lg-12"><h3>Решение</h3></div>
-			<div class="col-md-12">
-				<div style="padding-left: 33%">
-				<table border="1">
-					<tr>
-						<td>
-							<div id="container">
-								<p id="actionText"></p>
-								<img id="action" class="action" src="picture/ilon1.png" style="">
-							</div>
-						</td>
-
-					</tr>
-				</table>
-				<br><br>
+			<hr class="blueLine">
+			<div id="taskCss" class="row taskCss">
+				<div class="col-md-12">
+					<br><br><br>
+					<h3>Задача Flex</h3>
+					<p><img src="images/taskFlex.png"></p>
 				</div>
-
-				<script>
-					// статическое состояние
-					let action = document.getElementById('action');
-					let actionText = document.getElementById('actionText');
-
-					// при наведении мыши
-					action.onmouseover = function () {
-						const imgLinks = [
-							'picture/mini/mini-ilon2.png',
-						];
-						let currentIndex = 0;
-						setTimeout(function() {
-							action.style.opacity = "50%";
-							setTimeout(function() {
-								action.src = imgLinks[0];
-								actionText.innerHTML = "Как тебе такое?";
-								setTimeout(function() {
-									action.style.opacity = "100%";
-								}, 1000);
-							}, 1000);
-						}, 2000);
-					}
-					//при щелчке
-					action.onclick = function () {
-						action.src = "picture/ilon3.png";
-
-						const container = document.getElementById('container');
-						let t = setInterval(move, 1);
-						let pos = 1;
-
-						function move() {
-							action.style.left = pos + 'px';
-							action.style.bottom = pos + 'px';
-							pos++;
-							if (pos === 450) {
-								clearInterval(t)
-							}
-						}
-						// сепия
-						setTimeout(action0Go, 3000);
-					}
-					function action0Go() {
-						actionText.innerHTML = "Это еще не Тесла:)";
-						//возврат в стартовой состояние
-						action.classList.add('sepia');
-						setTimeout(function() {
-							action.src = "picture/mini/mini-ilon1.png";
-							action.classList.remove('sepia');
-							action.style.bottom = '0px';
-							action.style.left= '0px';
-							actionText.innerHTML = "";
-						}, 3000);
-					}
-				</script>
 			</div>
-		</div>
 
 
-		<a href="#" class="btn-scroll-top"><img id="img-go-up" src="images/up.png"></a>
-</div>
-<div class="row footer">
-	@2021
-</div>
+			<hr class="blueLine">
+			<div id="answer" class="row answer">
+				<div class="col-lg-12"><h3>Решение</h3></div>
+				<div class="col-md-12">
+					<div style="padding-left: 33%">
+					<table border="1">
+						<tr>
+							<td>
+								<div id="container">
+									<p id="actionText"></p>
+									<img id="action" class="action" src="picture/ilon1.png" style="">
+								</div>
+							</td>
+
+						</tr>
+					</table>
+					<br><br>
+					</div>
+
+					<script>
+						// статическое состояние
+						let action = document.getElementById('action');
+						let actionText = document.getElementById('actionText');
+
+						// при наведении мыши
+						action.onmouseover = function () {
+							const imgLinks = [
+								'picture/mini/mini-ilon2.png',
+							];
+							let currentIndex = 0;
+							setTimeout(function() {
+								action.style.opacity = "50%";
+								setTimeout(function() {
+									action.src = imgLinks[0];
+									actionText.innerHTML = "Как тебе такое?";
+									setTimeout(function() {
+										action.style.opacity = "100%";
+									}, 1000);
+								}, 1000);
+							}, 2000);
+						}
+						//при щелчке
+						action.onclick = function () {
+							action.src = "picture/ilon3.png";
+
+							const container = document.getElementById('container');
+							let t = setInterval(move, 1);
+							let pos = 1;
+
+							function move() {
+								action.style.left = pos + 'px';
+								action.style.bottom = pos + 'px';
+								pos++;
+								if (pos === 450) {
+									clearInterval(t)
+								}
+							}
+							// сепия
+							setTimeout(action0Go, 3000);
+						}
+						function action0Go() {
+							actionText.innerHTML = "Это еще не Тесла:)";
+							//возврат в стартовой состояние
+							action.classList.add('sepia');
+							setTimeout(function() {
+								action.src = "picture/mini/mini-ilon1.png";
+								action.classList.remove('sepia');
+								action.style.bottom = '0px';
+								action.style.left= '0px';
+								actionText.innerHTML = "";
+							}, 3000);
+						}
+					</script>
+				</div>
+			</div>
+
+
+			<a href="#" class="btn-scroll-top"><img id="img-go-up" src="images/up.png"></a>
+	</div>
+	<div class="row footer">
+		@2021
+	</div>
 </body>
 </html>

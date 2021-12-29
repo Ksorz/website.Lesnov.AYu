@@ -21,7 +21,7 @@ span {
 	position: relative;
 }
 
-#action4{
+.action{
 	position: absolute;
 	left: 0px;
 	bottom: 0px;
@@ -169,7 +169,7 @@ span {
 	z-index: 4;
 }
 
-.mouth1 {   /* рот 1 */
+.line1 {
 	position: absolute;
 	top: 155px;
 	left: 105px;
@@ -183,7 +183,7 @@ span {
 	-o-transform: rotate(-30deg);
 	transform: rotate(-30deg);
 }
-.mouth2 {   /* рот 2 */
+.line2 {
 	position: absolute;
 	top: 169px;
 	left: 143px;
@@ -198,7 +198,7 @@ span {
 	transform: rotate(30deg);
 }
 
-.n-1{  /* нога 1 */
+.n-1{
 	position: absolute;
 	border: 30px solid transparent;
 	border-top: 140px solid  #819CAF;
@@ -206,7 +206,7 @@ span {
 	top: 80%;
 	z-index: 2;
 }
-.n-2{  /* нога 2 */
+.n-2{
 	position: absolute;
 	border: 30px solid transparent;
 	border-top: 140px solid  #A6BECF;
@@ -215,7 +215,7 @@ span {
 	z-index: 2;
 }
 
-.n-3{  /* нога 3 */
+.n-3{
 	position: absolute;
 	border: 30px solid transparent;
 	border-top: 140px solid  #819CAF;
@@ -223,7 +223,7 @@ span {
 	top: 80%;
 	z-index: 2;
 }
-.n-4{  /* нога 4 */
+.n-4{
 	position: absolute;
 	border: 30px solid transparent;
 	border-top: 140px solid  #A6BECF;
