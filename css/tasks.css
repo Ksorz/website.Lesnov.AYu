@@ -232,6 +232,15 @@ span {
 	z-index: 2;
 }
 
+.n-5{
+	position: absolute;
+	border: 50px solid transparent;
+	border-top: 170px solid  #A6BECF;
+	left: -5%;
+	top: 80%;
+	z-index: 2;
+}
+
 .hvost {
 	position: absolute;
 	top: -20px;

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<main>
+
+
+    <head>
+        <title>Pyramide</title>
+        <link rel="stylesheet" href="css/slideStyle.css">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+
+    </head>
+
+    <body>
+        <div class="head">
+            <button onclick="stopSliding(1, true)" class="btn" id="btn4">STOP!</button>
+            <div class="notifications"></div>
+            <button onclick="begin()" class="btn" id="btn5">START!</button>
+        </div>
+        <div class="game" id="game">
+            <div class="gameSideWindow" id="game1"></div>
+            <div class="gameMainWindow" id="gameMain"></div>
+            <div class="gameSideWindow" id="game2"></div>
+        </div>
+        <div class="buttons">
+            <button onclick="stopSliding(1, true)" class="btn" id="btn1">←</button>
+            <button onclick="renew();" class="btn" id="btn2">SKIP!</button>
+            <button onclick="stopSliding(1, false)" class="btn" id="btn3">→</button>
+
+
+        </div>
+
+
+
+
+
+
+
+    </body>
+
+    <script>
+
+        document.onkeydown = function(event) {
+            if (event.keyCode == "37" || event.key == "1") {
+                document.getElementById('btn1').click();
+            } else if (event.keyCode == "39" || event.key == "2") {
+                document.getElementById('btn3').click();
+            } else if (event.key == " " || event.keyCode == "38" || event.keyCode == "40") {
+                document.getElementById('btn2').click();
+            }
+            //console.log(event.key);
+        }
+
+        var colors = ["rgb(102, 170, 204)", "rgb(208, 122, 221)", "rgb(215, 179, 44)", "rgb(103, 231, 164)", "rgb(213, 44, 98)", "rgb(34, 59, 171)", "rgb(215, 77, 30)", "rgb(83, 22, 147)", "rgb(14, 144, 5)"]
+
+        var speed = 2000;
+        var mode1;
+        var windowWidth = window.innerWidth;
+        var windowHeight = window.innerHeight;
+        var blockWidthCoeff = windowWidth * 0.15 >= 250 ? 1 : (windowWidth * 0.15) / 250;
+        var slideWidth;
+        var topBlockWidth = 0;
+        var pyramide = [];
+        var currentBlockWidth_L;
+        var currentBlockWidth_R;
+        var mainBlock_L;
+        var mainBlock_R;
+
+        function begin() {
+            btnSwap(true);
+        }
+
+
+
+        //var circle = document.getElementById("mainBlock_L");
+        //var change = document.getElementById("change");
+
+
+
+        function generate(thisBlock, isFirst = true, thisCont = "gameMain") {
+            newRnd = parseInt(getRandom(10, 250) * blockWidthCoeff);
+
+
+            if (isFirst) {
+
+                thisBlock.setAttribute("class", "block animationFall");
+                document.getElementById(thisCont).append(thisBlock);
+            }
+
+            thisBlock.style["animation-duration"] = speed + (newRnd * 2) + "ms";
+            thisBlock.style.width = newRnd.toString().concat("px");
+            thisBlock.style.background = colors[parseInt(Math.round(getRandom(0, colors.length)))]
+
+
+            // Относительно длины блока - анимация от рамки до рамки
+            // document.documentElement.style.setProperty("--width", 500 - newRnd + "px");
+            return newRnd;
+        }
+
+        function stopSliding(iter, isLeft) {
+
+            var chosenBlockWidth = isLeft ? currentBlockWidth_L : currentBlockWidth_R;
+            var newBlock = document.createElement("div");
+
+            newBlock.setAttribute("class", "block");
+            addAttributes(newBlock, isLeft);
+            document.getElementById("gameMain").append(newBlock);
+            document.getElementById("btn1").setAttribute("onclick", "stopSliding(" + (iter + 1) + ", true)");
+            document.getElementById("btn3").setAttribute("onclick", "stopSliding(" + (iter + 1) + ", false)");
+
+            mode1 ? gameMode1(iter, isLeft, chosenBlockWidth) : gameMode2(iter, isLeft, newBlock, chosenBlockWidth);
+
+            if (isLeft) {
+                resetAnimation(mainBlock_L);
+                currentBlockWidth_L = generate(mainBlock_L, false, "game1");
+            } else {
+                resetAnimation(mainBlock_R);
+                currentBlockWidth_R = generate(mainBlock_R, false, "game2");
+            }
+
+
+
+        }
+
+        function gameMode2(iter, isLeft, newBlock, chosenBlockWidth) {
+            var goingUp = true;
+
+            if (isLeft) {
+                newBlock.style.order = "0" - iter;
+                pyramide.unshift(chosenBlockWidth);
+            } else {
+                newBlock.style.order = "0" + iter;
+                pyramide.push(chosenBlockWidth);
+            } ['79px', '26px', '100px']
+
+            for (i = 1; i < pyramide.length; i++) {
+                if (pyramide[i - 1] > pyramide[i] && goingUp) {
+                    goingUp = false;
+                }
+                if (pyramide[i - 1] < pyramide[i] && !goingUp) {
+                    sayGameOver();
+                    break;
+                }
+            }
+        }
+
+        function gameMode1(iter, isLeft, chosenBlockWidth) {
+
+            if (topBlockWidth > chosenBlockWidth || topBlockWidth == 0) {
+                topBlockWidth = chosenBlockWidth;
+            } else {
+                sayGameOver();
+            }
+        }
+
+        function sayGameOver() {
+            alert('Game over');
+            game1.removeChild(game1.firstChild);
+            game2.removeChild(game2.firstChild);
+        }
+
+        function addAttributes(block, isLeft) {
+
+            // Высчитываем положение нового блока (сверху над предыдущим)
+            //block.style.top = (104 - (8 * iter)).toString().concat("%");
+            // Центрируем блок (отступ слева в %)
+            //block.style.left = ((500 - currentBlockWidth_L) / 500 * 50).toString().concat("%");
+
+            block.style.boxShadow = "none";
+            if (isLeft) {
+                if (mode1) {
+                    block.style.width = currentBlockWidth_L.toString().concat("px");
+                } else {
+                    block.style.height = currentBlockWidth_L.toString().concat("px");
+                }
+                block.style.background = window.getComputedStyle(mainBlock_L).getPropertyValue("background");
+            } else {
+                if (mode1) {
+                    block.style.width = currentBlockWidth_R.toString().concat("px");
+                } else {
+                    block.style.height = currentBlockWidth_R.toString().concat("px");
+                }
+                block.style.background = window.getComputedStyle(mainBlock_R).getPropertyValue("background");
+            }
+            if (!mode1) block.style.width = "20px";
+        }
+
+        function getRandom(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        function startNewGame(isMode1) {
+            while (gameMain.firstChild) {
+                gameMain.removeChild(gameMain.firstChild)
+            };
+            while (game1.firstChild) {
+                game1.removeChild(game1.firstChild)
+            };
+            while (game2.firstChild) {
+                game2.removeChild(game2.firstChild)
+            };
+            document.getElementById("btn1").setAttribute("onclick", "stopSliding(1, true)");
+            document.getElementById("btn3").setAttribute("onclick", "stopSliding(1, false)");
+            mode1 = isMode1;
+            slideWidth = 400;
+            topBlockWidth = 0;
+            pyramide = [];
+            mainBlock_L = document.createElement("div");
+            mainBlock_R = document.createElement("div");
+            __settings();
+            btnSwap(false);
+            renew(true);
+            mainBlock_L.addEventListener("animationiteration", () => {
+                currentBlockWidth_L = generate(mainBlock_L, false, "game1");
+                resetAnimation(mainBlock_L);
+            });
+            mainBlock_R.addEventListener("animationiteration", () => {
+                currentBlockWidth_R = generate(mainBlock_R, false, "game2");
+                resetAnimation(mainBlock_R);
+                //console.log(windowWidth);
+                //console.log(windowHeight);
+                //console.log(blockWidthCoeff);
+                //console.log(pyramide);
+            });
+        }
+
+        function renew(isFirst = false) {
+            currentBlockWidth_L = generate(mainBlock_L, isFirst, "game1");
+            currentBlockWidth_R = generate(mainBlock_R, isFirst, "game2");
+            resetAnimation(mainBlock_L);
+            resetAnimation(mainBlock_R);
+        }
+
+        function btnSwap(isChoosingMode) {
+            if (isChoosingMode) {
+                document.getElementById("btn1").setAttribute("onclick", "startNewGame(true)");
+                document.getElementById("btn3").setAttribute("onclick", "startNewGame(false)");
+                document.getElementById("btn1").firstChild.data = "Mode 1";
+                document.getElementById("btn3").firstChild.data = "Mode 2";
+            } else {
+                document.getElementById("btn1").setAttribute("onclick", "stopSliding(1, true)");
+                document.getElementById("btn3").setAttribute("onclick", "stopSliding(1, true)");
+                document.getElementById("btn1").firstChild.data = "←";
+                document.getElementById("btn3").firstChild.data = "→";
+            }
+        }
+
+        function __settings(colorBased = false) {
+            document.documentElement.style.setProperty("--speed", speed + "ms");
+
+            document.getElementById("gameMain").style.flexDirection = mode1 ? "column-reverse" : "row";
+            document.getElementById("gameMain").style.alignItems = mode1 ? "center" : "flex-end";
+            document.getElementById("gameMain").style.justifyContent = mode1 ? "flex-start" : "center";
+        }
+
+        function resetAnimation(block) {
+            block.style.animation = "none";
+            block.offsetHeight; /* trigger reflow */
+            block.style.animation = null;
+            block.style["animation-duration"] = speed + getRandom(0, 500) + "ms";
+        }
+
+    </script>
+</main>
+
+</html>

@@ -1,0 +1,30 @@
+{
+    /**/
+    /*Ширина и рамки, задаваемые элементам, суммируются*/
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    background: #000;
+}
+.main {
+    width: 300px;
+    height: 600px;
+    margin: 100px auto 0;
+    border: 10px solid silver;
+    /*чтобы не было отступа display: inline-block;*/
+    font-size: 0;
+}
+.cell {
+    width: 28px;
+    height: 28px;
+    border: 1px solid silver;
+    /*Отображение элементов в строку (будет доп отступ из-за отступа шрифта родительского элемента (main))*/
+    display: inline-block;
+}
+.movingCell {
+    background-color: blue;
+}
+.fixedCell {
+    background-color: green;
+}

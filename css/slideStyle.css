@@ -1,0 +1,156 @@
+:root {
+    --width: 400px;
+    --speed: 2000ms;
+}
+body {
+    /*display: flex;
+    flex-direction: column;
+    justify-content: center;*/
+    margin: auto;
+    padding: 10px;
+    align-items: center;
+    width: 80%;
+
+    border: 10px solid red;
+}
+.head {
+    display: flex;
+    /*flex-direction: column-reverse;
+    align-items: center;*/
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    border: 10px solid rgb(83, 162, 110);
+}
+.game {
+    display: flex;
+    border: 10px solid rgb(226, 212, 56);
+    justify-content: center;
+
+
+}
+.gameMainWindow {
+    display: flex;
+    /*flex-direction: column-reverse;
+    align-items: center;*/
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: center;
+
+    border-top: 10px solid rgb(32, 186, 64);
+    border-bottom: 10px solid rgb(32, 186, 64);
+
+    width: 35%;
+    max-width: 500px;
+    height: 500px;
+    max-height: 500px;
+}
+.gameSideWindow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    border-top: 10px solid rgb(70, 162, 181);
+    border-bottom: 10px solid rgb(70, 162, 181);
+
+    width: 20%;
+    height: 500px;
+    max-width: 260px;
+    max-height: 500px;
+}
+#game1 {
+    border-left: 10px solid rgb(70, 162, 181);
+}
+#game2 {
+    border-right: 10px solid rgb(70, 162, 181);
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+
+    border: 10px solid rgb(83, 162, 110);
+
+}
+.btn {
+    font-size: 2rem;
+    /*Отступы рамок от текста*/
+    padding: 0.5rem 2rem;
+    border: 3px solid black;
+    border-radius: 1rem;
+    margin: 1rem auto;
+    display: block;
+    background: lightgreen;
+    top: 50px;
+}
+.btn:active {
+    background: red;
+}
+.block {
+    display: flex;
+    height: 20px;
+    width: 100px;
+    border: 1px solid black;
+
+    position: relative;
+
+    box-shadow: 10px 10px 20px rgba(0,0,0,0.5);
+}
+
+.vertical {
+    transform: rotateZ(90deg);
+}
+
+
+.animationFall {
+
+    animation-duration: 2000ms;
+
+    animation-name: animationFall;
+    animation-timing-function: ease-in;
+
+
+    animation-iteration-count: infinite;
+    /*transition: transform 5000ms ease-in;*/
+    /*animation: infinite linear;*/
+
+}
+
+.content:hover block.animationFall  {
+    animation-name: none;
+}
+
+
+@keyframes animationFall {
+    0% {
+        top: 0px;
+        transform: rotateZ(0deg);
+    }
+    100% {
+        top: 485px;
+        transform: rotateZ(180deg);
+    }
+
+}
+
+/*
+
+Клиентское приложение на языке JS
+Приложение сохранить как отдельный модуль с именем Game_LastName_GameTitle.
+
+Миниавторизация.
+Должны быть реализованы различные виды событий (нажатие, перемещение, двойной клик, наведение . . .)
+Ограничение работы приложения по времени.
+Ускорение работы программы, в зависимости от уровня сложности.
+Проверка окончания игры (по времени, по баллам, ...)
+Продумать логику игры.
+Обязателен подсчет баллов, штрафные балы, изменение баллов от уровня сложности.
+Динамическое создание элементов.
+Возможность смены цветовой палитры.
+Допускается использование внешних графических библиотек.
+Данные после каждой игры сохраняются (localstorage, JSON) и передаются на другую страницу, для данного пользователя.
+Вывод последних результатов.
+Анимация элементов.
+Индивидуальное обсуждение задания для проекта.
+
+*/

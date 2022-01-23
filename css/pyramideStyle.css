@@ -1,0 +1,41 @@
+{
+    /**/
+    /*Ширина и рамки, задаваемые элементам, суммируются*/
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    background: #000;
+}
+.main {
+    width: 1000px;
+    height: 500px;
+    margin: 100px auto 0;
+    border-top: 1px solid silver;
+    border-bottom: 10px solid silver;
+    /*чтобы не было отступа display: inline-block;*/
+    font-size: 0;
+}
+.cell {
+    display: inline-flex;
+
+    height: 28px;
+
+    background-color: green;
+    border: 1px solid silver;
+    /*Отображение элементов в строку (будет доп отступ из-за отступа шрифта родительского элемента (main))*/
+
+}
+.one {
+    flex: 1;
+    width: 28px;
+}
+.two {
+    width: 38px;
+}
+.three {
+    width: 48px;
+}
+.four {
+    width: 58px;
+}
