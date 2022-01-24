@@ -13,6 +13,7 @@
     </head>
 
     <body>
+
         <div class="head">
             <button onclick="stopSliding(1, true)" class="btn" id="btn4">STOP!</button>
             <div class="notifications"></div>
@@ -27,14 +28,7 @@
             <button onclick="stopSliding(1, true)" class="btn" id="btn1">←</button>
             <button onclick="renew();" class="btn" id="btn2">SKIP!</button>
             <button onclick="stopSliding(1, false)" class="btn" id="btn3">→</button>
-
-
         </div>
-
-
-
-
-
 
 
     </body>
@@ -240,7 +234,7 @@
                 document.getElementById("btn3").firstChild.data = "Mode 2";
             } else {
                 document.getElementById("btn1").setAttribute("onclick", "stopSliding(1, true)");
-                document.getElementById("btn3").setAttribute("onclick", "stopSliding(1, true)");
+                document.getElementById("btn3").setAttribute("onclick", "stopSliding(1, false)");
                 document.getElementById("btn1").firstChild.data = "←";
                 document.getElementById("btn3").firstChild.data = "→";
             }
