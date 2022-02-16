@@ -13,43 +13,84 @@
     </head>
 
     <body>
-
+        <div class="name" id="playerName">
+            New game
+        </div>
         <div class="head">
-            <button onclick="stopSliding(1, true)" class="btn" id="btn4">STOP!</button>
-            <div class="notifications"></div>
-            <button onclick="begin()" class="btn" id="btn5">START!</button>
+            <button onclick="sayGameOver('Game stopped')" class="btn" id="btn1">STOP!</button>
+            <div class="notifications">
+                <div class="noteBox">
+                    <span style="color: black; font-size: 1rem">Time:</span>
+                    <span id="timer"> </span>
+                </div>
+                <div class="noteBox">
+                    <span style="color: black; font-size: 1rem;">Difficulty:</span>
+                    <nav>
+                        <li><a href="#" id="levelResult">1</a>
+                            <ul id="difficultyList"></ul>
+                        </li>
+                    </nav>
+                </div>
+                <div class="noteBox">
+                    <span style="color: black; font-size: 1rem">Best result:</span>
+                    <span id="bestResult">0</span>
+                </div>
+                <div class="noteBox">
+                    <span style="color: black; font-size: 1rem">Score:</span>
+                    <span id="currentResult">0</span>
+                </div>
+            </div>
+            <button onclick="begin()" class="btn" id="btn2">START!</button>
         </div>
         <div class="game" id="game">
             <div class="gameSideWindow" id="game1"></div>
-            <div class="gameMainWindow" id="gameMain"></div>
+            <!-- <div class="gameMainWindow" id="myMostBrilliantPyramide"></div> -->
+            <div class="gameMainWindow" id="gameMain">
+                <form>
+                    <div>
+                        <p>Hey! Wanna build some pyramide?</p>
+                        <p>Enter your name and press the start button</p>
+                        <input placeholder="Your name" id="myInput">
+                    </div>
+                </form>
+            </div>
             <div class="gameSideWindow" id="game2"></div>
         </div>
         <div class="buttons">
-            <button onclick="stopSliding(1, true)" class="btn" id="btn1">←</button>
-            <button onclick="renew();" class="btn" id="btn2">SKIP!</button>
-            <button onclick="stopSliding(1, false)" class="btn" id="btn3">→</button>
-        </div>
+            <button onclick="stopSliding(1, true)" class="btn" id="btn3">←</button>
+            <button onclick="renewBlocks();" class="btn" id="btn4">SKIP!</button>
+            <label class="toggle" id="toggle">
+                <input type="checkbox" id="cb">
+                <span class="labels" data-on="COLORBASED ON" data-off="COLORBASED OFF"></span>
+            </label>
+            <button onclick="stopSliding(1, false)" class="btn" id="btn5">→</button>
 
+
+
+
+        </div>
 
     </body>
 
     <script>
+        var allColors = ["rgb(102, 170, 204)", "rgb(208, 122, 221)", "rgb(215, 179, 44)", "rgb(103, 231, 164)",
+            "rgb(213, 44, 98)", "rgb(34, 59, 171)", "rgb(215, 77, 30)", "rgb(83, 22, 147)", "rgb(14, 144, 5)"
+        ]
+        var colors = allColors;
 
-        document.onkeydown = function(event) {
-            if (event.keyCode == "37" || event.key == "1") {
-                document.getElementById('btn1').click();
-            } else if (event.keyCode == "39" || event.key == "2") {
-                document.getElementById('btn3').click();
-            } else if (event.key == " " || event.keyCode == "38" || event.keyCode == "40") {
-                document.getElementById('btn2').click();
-            }
-            //console.log(event.key);
-        }
 
-        var colors = ["rgb(102, 170, 204)", "rgb(208, 122, 221)", "rgb(215, 179, 44)", "rgb(103, 231, 164)", "rgb(213, 44, 98)", "rgb(34, 59, 171)", "rgb(215, 77, 30)", "rgb(83, 22, 147)", "rgb(14, 144, 5)"]
+        const noteTimer = document.getElementById("timer");
+        const currentResult = document.getElementById("currentResult");
+        const bestResult = document.getElementById("bestResult");
+        const levelResult = document.getElementById("levelResult"); // Уровень
+        const difficultyList = document.getElementById("difficultyList"); // Выпадающий список сложности
+        const gameMainWindow = document.getElementById("gameMain"); // Основное окно игры
+        const game1Window = document.getElementById("game1");
+        const game2Window = document.getElementById("game2");
+        const colorBtn = document.getElementById("toggle");
+        const isColorBased = document.getElementById("cb");
+        const test_ = document.getElementById("myMostBrilliantPyramide");
 
-        var speed = 2000;
-        var mode1;
         var windowWidth = window.innerWidth;
         var windowHeight = window.innerHeight;
         var blockWidthCoeff = windowWidth * 0.15 >= 250 ? 1 : (windowWidth * 0.15) / 250;
@@ -58,23 +99,349 @@
         var pyramide = [];
         var currentBlockWidth_L;
         var currentBlockWidth_R;
+        var currentBlockColor_L;
+        var currentBlockColor_R;
         var mainBlock_L;
         var mainBlock_R;
+        var chosenColor;
+        var myMostBrilliantPyramide = "";
+        var myMostBrilliantPyramideStyle = "";
+
+        var tempGameMainWindow;
+        var tempGameMainWindowStyle;
+
+        var seconds = 60;
+        var currentPoints = 0;
+        var maximumPoints = 0;
+        var timer;
+        var speed = 2000;
+        var mode1;
+        var logOutData = gameMainWindow.innerHTML;
+        var playerName;
+        var playerLevel = 1;
+        var difficulty = playerLevel;
+
+        const btn1 = document.getElementById("btn1");
+        const btn2 = document.getElementById("btn2");
+        const btn3 = document.getElementById("btn3");
+        const btn4 = document.getElementById("btn4");
+        const btn5 = document.getElementById("btn5");
+
+
+
+
+        var mode1Rules =
+            "Mode 1\n\nYou have to build the pyramide by folding blocks on each other. If next block is larger than the previous one - you will lose";
+        var mode2Rules =
+            "Mode 2\n\nYou have to build the pyramide by lining up blocks next to each other. Blocks on each side should be smaller than adjacent blocks, otherwise - you will lose";
+        var generalRules =
+            "The Pyramide!\nScore points by building more and more majestic pyramids! To reach the next difficulty level - score at least 1000 points. At each difficulty level, you will get a little more points, as well as for larger blocks. You can choose any of the already reached difficulty levels.\nYou can also switch the 'COLORBASED' slider to get an extra difficulty and points. This mode mean that only same color blocks is availible to build the pyramide.\nYou can use the keyboard hotkeys '←', '→' and 'Space', '↑', '↓' to choose right or left block or skip both.\n\nGood luck!";
+
+        function message(container, msg, rem = "1.2rem") {
+            container.style.alignItems = "center";
+            container.style.justifyContent = "center";
+            msg =
+                "<span style='white-space: pre-line; color: rgb(38, 8, 107); line-height: 30px; padding: 1.2rem; text-align: center; font-size: " +
+                rem + "'>" + msg + "</span>";
+            container.innerHTML = msg;
+        }
+
+        document.onkeydown = function (event) {
+            if (event.keyCode == "37" || event.key == "1") {
+                document.getElementById('btn3').click();
+            } else if (event.keyCode == "39" || event.key == "2") {
+                document.getElementById('btn5').click();
+            } else if (event.keyCode == " " || event.keyCode == "32" || event.keyCode == "38" || event.keyCode ==
+                "40") {
+                event.preventDefault();
+                document.getElementById('btn4').click();
+            } else if (event.key == "enter" || event.keyCode == "13") {
+                event.preventDefault();
+                document.getElementById('btn2').click();
+            }
+        }
+        logOut();
+        isGameMode(false);
+        btn2.setAttribute('disabled', true);
+        btn1.setAttribute('disabled', true);
+        clearTag(difficultyList);
+        colorBtn.style.display = "none";
+
+        // localStorage.clear();
+
+        //////////////////////////////////////////////////////
+
+        function isGameMode(isGame, isMode1) {
+            if (isGame) {
+                // console.log(document.getElementById("cb").checked);
+                colors = isColorBased.checked ? getRandArray(allColors, 5) : allColors;
+                btn4.style.display = "block";
+                colorBtn.style.display = "none";
+                clearTag(gameMain); // stopTheGame(); ?????
+                clearTag(game1Window);
+                clearTag(game2Window);
+                game1Window.style.justifyContent = null;
+                game2Window.style.justifyContent = null;
+                setDifficultyList(false); // Отключаем выбор сложности
+                levelResult.textContent = difficulty; // ?????
+                speed = 2000 - 150 * difficulty; // Устанавливаем выбранную сложность
+                currentResult.firstChild.data = 0; // Обнуляем текущий результат
+                noteTimer.firstChild.data = seconds + " : " + 0; // Обнуляем таймер
+                setButtons(3); // Активируем/деактивируем нужные кнопки
+                mode1 = isMode1; // Устанавливаем выбранный игровой режим
+                slideWidth = 400;
+                topBlockWidth = 0;
+                pyramide = [];
+                mainBlock_L = document.createElement("div");
+                mainBlock_R = document.createElement("div");
+                btn1.setAttribute("onclick", "sayGameOver('Game stopped')");
+                btn1.firstChild.data = "STOP!";
+                __settings();
+                // chooseGameMode(false);
+
+
+                // Генерируем падающие блоки
+                renewBlocks(true);
+                mainBlock_L.addEventListener("animationiteration", () => {
+                    currentBlockWidth_L = generateBlock(mainBlock_L, false, "game1");
+                    resetAnimation(mainBlock_L);
+                });
+                mainBlock_R.addEventListener("animationiteration", () => {
+                    currentBlockWidth_R = generateBlock(mainBlock_R, false, "game2");
+                    resetAnimation(mainBlock_R);
+                });
+
+                // Задаём таймер
+                secTimer = seconds;
+                interval = 0;
+                timer = setInterval(function () {
+                    // Условие если время закончилось то...
+                    if (secTimer < 0) {
+                        // Выводит сообщение что время закончилось
+                        sayGameOver("Time is over");
+                    } else {
+                        // Выводим строку в блок для показа таймера. Обновляем коэффициенты
+                        noteTimer.firstChild.data = secTimer + " : " + interval;
+                        --interval;
+                        if (interval < 0) {
+                            --secTimer;
+                            interval = 9;
+                        }
+                    }
+                    // Уменьшаем таймер, обновляем счётчик
+                }, 100);
+            } else {
+                setDifficultyList(true);
+                chosenColor = null;
+                colorBtn.setAttribute('disabled', true);
+                currentPoints = 0;
+                clearInterval(timer);
+                noteTimer.firstChild.data = seconds + " : " + 0;
+                saveJsonData(playerName);
+                setButtons(1);
+                renewData();
+                btn1.setAttribute("onclick", "logOut()");
+                btn1.firstChild.data = "QUIT!";
+
+                // if (myMostBrilliantPyramide) {
+                //     test_.innerHTML = myMostBrilliantPyramide;
+                // }
+                //     bestResult.addEventListener('mouseenter', e => {
+
+                //         tempGameMainWindow = gameMainWindow.innerHTML;
+                //         tempGameMainWindowStyle = gameMainWindow.style;
+
+                //         gameMainWindow.innerHTML = myMostBrilliantPyramide;
+                //         gameMainWindow.style = myMostBrilliantPyramideStyle;
+
+                //     }, false);
+
+                //     bestResult.addEventListener('mouseleave', e => {
+                //         gameMainWindow.innerHTML = tempGameMainWindow;
+                //         gameMainWindow.style = tempGameMainWindowStyle;
+                //     }, false);
+                // }
+            }
+        }
+
+        // Режим активности и функциональности кнопок (1 - меню, 2 - выбор режима игры, 3 - игра)
+        function setButtons(mode = 1) {
+            switch (mode) {
+                case 1: // Меню
+                    switchActiveBtn([btn3, btn4, btn5], false);
+                    switchActiveBtn([btn1, btn2], true);
+                    break;
+                case 2: // Выбор режима игры
+                    btn4.style.display = "none";
+                    colorBtn.style.display = "block";
+                    message(game1Window, mode1Rules, "1.4rem");
+                    message(game2Window, mode2Rules, "1.4rem");
+                    message(gameMainWindow, generalRules);
+                    btn3.setAttribute("onclick", "isGameMode(true, true)");
+                    btn5.setAttribute("onclick", "isGameMode(true, false)");
+                    btn3.firstChild.data = "Mode 1";
+                    btn5.firstChild.data = "Mode 2";
+                    switchActiveBtn([btn2, btn4], false);
+                    switchActiveBtn([btn1, btn3, btn5], true);
+                    break;
+                case 3: // Игра
+                    btn3.setAttribute("onclick", "stopSliding(1, true)");
+                    btn5.setAttribute("onclick", "stopSliding(1, false)");
+                    btn3.firstChild.data = "←";
+                    btn5.firstChild.data = "→";
+                    switchActiveBtn([btn2], false);
+                    switchActiveBtn([btn1, btn3, btn4, btn5], true);
+                    break;
+                default:
+                    return;
+                    break;
+            }
+        }
 
         function begin() {
-            btnSwap(true);
+            switchActiveBtn([btn3, btn5], true);
+            if (!playerName) {
+                playerName = document.getElementById("myInput").value.trim();
+                playerName = playerName.charAt(0).toUpperCase() + playerName.toLowerCase().slice(
+                    1); // С заглавной буквы
+                loadJsonData(playerName);
+                setDifficultyList(true);
+                bestResult.firstChild.data = Math.floor(maximumPoints);
+            }
+            clearTag(gameMainWindow);
+            saveJsonData(playerName);
+            renewData();
+            setButtons(2);
+            // btn1.setAttribute('disabled', true);
+        }
+
+        function logOut() {
+            var startMessage = "New game";
+            myMostBrilliantPyramide = "";
+            myMostBrilliantPyramideStyle = "";
+            gameMainWindow.style.alignItems = "center";
+            gameMainWindow.style.justifyContent = "center";
+            gameMainWindow.innerHTML = logOutData;
+            playerLevel = 1;
+            maximumPoints = 0;
+            difficulty = playerLevel;
+            playerName = null;
+            document.getElementById("playerName").innerHTML = startMessage;
+            btn2.firstChild.data = "START!";
+            renewData();
+            clearTag(difficultyList);
+            btn1.setAttribute('disabled', true);
+            let input = document.getElementById("myInput");
+            btn2.setAttribute('disabled', true);
+            input.addEventListener("input", function (e) {
+                if (input.value.trim().length == 0) {
+                    btn2.setAttribute('disabled', true);
+                } else {
+                    btn2.removeAttribute('disabled');
+                }
+            })
+            input.addEventListener("input", function (e) {
+                if (input.value.trim().length == 0) {
+                    btn2.setAttribute('disabled', true);
+                } else {
+                    btn2.removeAttribute('disabled');
+                }
+            })
+        }
+
+        function saveJsonData(name) {
+            var json = {
+                "playerLevel": playerLevel,
+                "maximumPoints": maximumPoints,
+                "difficulty": difficulty,
+                "myMostBrillianPyramide": myMostBrilliantPyramide,
+                "myMostBrilliantPyramideStyle": myMostBrilliantPyramideStyle,
+            }
+            localStorage.setItem(name, JSON.stringify(json));
+        }
+
+        function loadJsonData(name) {
+            if (localStorage.getItem(name)) {
+                var json = JSON.parse(localStorage.getItem(name));
+                playerLevel = json.playerLevel;
+                maximumPoints = json.maximumPoints;
+                difficulty = json.difficulty;
+                myMostBrilliantPyramide = json.myMostBrilliantPyramide;
+                myMostBrilliantPyramideStyle = json.myMostBrilliantPyramideStyle;
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        function renewData() {
+            levelResult.textContent = difficulty;
+            bestResult.firstChild.data = Math.floor(maximumPoints);
+            document.getElementById("playerName").innerHTML = playerName ? playerName + " (Level: " + playerLevel +
+                ")" : document.getElementById("playerName").innerHTML;
         }
 
 
+        function switchActiveBtn(btnArray, isActive) {
+            for (var i = 0; i < btnArray.length; i++) {
+                isActive ? btnArray[i].removeAttribute('disabled') : btnArray[i].setAttribute('disabled', true);
+            }
+        }
 
-        //var circle = document.getElementById("mainBlock_L");
-        //var change = document.getElementById("change");
+        function renewBlocks(isFirst = false) {
+            currentBlockWidth_L = generateBlock(mainBlock_L, isFirst, "game1");
+            currentBlockWidth_R = generateBlock(mainBlock_R, isFirst, "game2");
+            resetAnimation(mainBlock_L);
+            resetAnimation(mainBlock_R);
+        }
 
 
+        function stopTheGame(clearMain = true) {
+            if (clearMain) clearTag(gameMain);
+            clearTag(game1);
+            clearTag(game2);
+            isGameMode(false);
+            saveJsonData(playerName);
+        }
 
-        function generate(thisBlock, isFirst = true, thisCont = "gameMain") {
+
+        // Обновляем данные игры
+
+
+        function setDifficultyList(isOn) {
+            clearTag(difficultyList);
+            if (isOn) {
+                for (var i = 1; i <= playerLevel; i++) {
+                    (function (i) {
+                        var li = document.createElement('li');
+                        li.innerHTML = "<a href='javascript:difficulty = " + i + "; renewData()'>" + i + "</a>";
+                        difficultyList.append(li);
+                    }(i))
+                }
+            }
+        }
+
+
+        function countPoints(blockWeight) {
+            // Возвращаем значение веса блока к исходному (до 250)
+            blockWeight = blockWeight / blockWidthCoeff;
+            // Коэффициент блока (чем больше блок, тем больше очков). От 0.75 до 1
+            blockWeightCoeff = (250 + blockWeight) / 1000;
+            // Коэффициент сложности
+            levelCoeff = (40 + difficulty) / 50;
+            // Коэффициенты типа игры
+            modeCoeff = mode1 ? 1 : 0.8;
+            colorCoeff = isColorBased ? 1.5 : 1;
+
+            // Числовое значение определяет сложность, по-умолчанию = 200
+            currentPoints = currentPoints + (300 * blockWeightCoeff * levelCoeff * modeCoeff * colorCoeff);
+
+            currentResult.firstChild.data = Math.floor(currentPoints);
+        }
+
+        function generateBlock(thisBlock, isFirst = true, thisCont = "gameMain") {
             newRnd = parseInt(getRandom(10, 250) * blockWidthCoeff);
-
+            thisBlock.style.background = colors[parseInt(Math.round(getRandom(0, colors.length)))]
 
             if (isFirst) {
 
@@ -84,7 +451,14 @@
 
             thisBlock.style["animation-duration"] = speed + (newRnd * 2) + "ms";
             thisBlock.style.width = newRnd.toString().concat("px");
-            thisBlock.style.background = colors[parseInt(Math.round(getRandom(0, colors.length)))]
+            
+            if (thisCont == "game1") {
+                currentBlockColor_L = thisBlock.style.background;
+            } else {
+                currentBlockColor_R = thisBlock.style.background;
+            }
+
+
 
 
             // Относительно длины блока - анимация от рамки до рамки
@@ -99,59 +473,142 @@
 
             newBlock.setAttribute("class", "block");
             addAttributes(newBlock, isLeft);
+
             document.getElementById("gameMain").append(newBlock);
-            document.getElementById("btn1").setAttribute("onclick", "stopSliding(" + (iter + 1) + ", true)");
-            document.getElementById("btn3").setAttribute("onclick", "stopSliding(" + (iter + 1) + ", false)");
+            document.getElementById("btn3").setAttribute("onclick", "stopSliding(" + (iter + 1) + ", true)");
+            document.getElementById("btn5").setAttribute("onclick", "stopSliding(" + (iter + 1) + ", false)");
 
             mode1 ? gameMode1(iter, isLeft, chosenBlockWidth) : gameMode2(iter, isLeft, newBlock, chosenBlockWidth);
 
             if (isLeft) {
                 resetAnimation(mainBlock_L);
-                currentBlockWidth_L = generate(mainBlock_L, false, "game1");
+                currentBlockWidth_L = generateBlock(mainBlock_L, false, "game1");
             } else {
                 resetAnimation(mainBlock_R);
-                currentBlockWidth_R = generate(mainBlock_R, false, "game2");
+                currentBlockWidth_R = generateBlock(mainBlock_R, false, "game2");
             }
 
 
 
         }
 
-        function gameMode2(iter, isLeft, newBlock, chosenBlockWidth) {
-            var goingUp = true;
-
-            if (isLeft) {
-                newBlock.style.order = "0" - iter;
-                pyramide.unshift(chosenBlockWidth);
-            } else {
-                newBlock.style.order = "0" + iter;
-                pyramide.push(chosenBlockWidth);
-            } ['79px', '26px', '100px']
-
-            for (i = 1; i < pyramide.length; i++) {
-                if (pyramide[i - 1] > pyramide[i] && goingUp) {
-                    goingUp = false;
-                }
-                if (pyramide[i - 1] < pyramide[i] && !goingUp) {
-                    sayGameOver();
-                    break;
-                }
+        function getRandArray(arr, num) {
+            if (num >= arr.length) {
+                return arr;
             }
+            var temp = [];
+            for (i = 0; i < arr.length; i++) {
+                temp[i] = arr[i];
+            }
+            var index;
+            var newArr = [];
+
+            for (let i = 0; i < num; i++) {
+                index = Math.floor(getRandom(0, temp.length));
+                console.log(index);
+                newArr[i] = temp[index];
+                temp.splice(index, index);
+            }
+            return newArr;
         }
 
         function gameMode1(iter, isLeft, chosenBlockWidth) {
 
+            var clr = isLeft ? currentBlockColor_L : currentBlockColor_R;
+            if (!chosenColor) {
+                chosenColor = clr;
+            } else if (isColorBased.checked && chosenColor != clr) {
+                sayGameOver("Game over");
+                return;
+            }
+
             if (topBlockWidth > chosenBlockWidth || topBlockWidth == 0) {
                 topBlockWidth = chosenBlockWidth;
+                countPoints(chosenBlockWidth);
+                console.log(currentPoints);
+                console.log(maximumPoints);
+                if (currentPoints > maximumPoints) {
+                    myMostBrilliantPyramide = gameMainWindow.innerHTML;
+                    myMostBrilliantPyramideStyle = gameMainWindow.style;
+                }
             } else {
-                sayGameOver();
+                sayGameOver("Game over");
             }
         }
 
-        function sayGameOver() {
-            alert('Game over');
-            game1.removeChild(game1.firstChild);
-            game2.removeChild(game2.firstChild);
+        function gameMode2(iter, isLeft, newBlock, chosenBlockWidth) {
+            var goingUp = true;
+            var clr;
+
+            if (isLeft) {
+                newBlock.style.order = "0" - iter;
+                pyramide.unshift(chosenBlockWidth);
+                clr = currentBlockColor_L;
+            } else {
+                newBlock.style.order = "0" + iter;
+                pyramide.push(chosenBlockWidth);
+                clr = currentBlockColor_R;
+            } ['79px', '26px', '100px']
+
+            // Проверяем на цвет если выбрано Colobased ON
+            if (pyramide.length == 1) {
+                chosenColor = clr;
+            } else if (isColorBased.checked && chosenColor != clr) {
+                sayGameOver("Game over");
+                return;
+            }
+
+            for (i = 1; i < pyramide.length; i++) {
+                if (pyramide[i - 1] > pyramide[i] && goingUp) {
+                    goingUp = false;
+
+                }
+                if (pyramide[i - 1] < pyramide[i] && !goingUp) {
+                    sayGameOver("Game over");
+                    return;
+                }
+
+            }
+            if (currentPoints > maximumPoints) {
+                myMostBrilliantPyramide = gameMainWindow.innerHTML;
+                myMostBrilliantPyramideStyle = gameMainWindow.style;
+            }
+            countPoints(chosenBlockWidth);
+        }
+
+        function sayGameOver(message) {
+            var temp = maximumPoints;
+            if (currentPoints > maximumPoints) {
+
+                maximumPoints = currentPoints;
+                bestResult.firstChild.data = Math.floor(maximumPoints);
+            }
+
+
+            if (currentPoints < 1000) {
+                alert(message + ". Your result is: " + Math.floor(currentPoints));
+            } else {
+                if (playerLevel < 10 && playerLevel == difficulty) {
+                    alert("Congatulations! Your level is increased: " + ++playerLevel + "!");
+                    ++difficulty;
+                } else {
+                    var notification = playerLevel < 10 ?
+                        "Your level is not increased. Current difficulty is lower than your level" :
+                        "You have already reached the maximum level";
+                    if (currentPoints > temp) {
+                        alert("New record! " + Math.floor(currentPoints) +
+                            "!\n" + notification);
+                    } else {
+                        alert("Impressive result: " + Math.floor(currentPoints) +
+                            "!\n" + notification);
+                    }
+
+                }
+                levelResult.textContent = difficulty;
+            }
+            setTimeout(20);
+            stopTheGame(false);
+            btn2.firstChild.data = "AGAIN!";
         }
 
         function addAttributes(block, isLeft) {
@@ -184,68 +641,26 @@
             return Math.random() * (max - min) + min;
         }
 
-        function startNewGame(isMode1) {
-            while (gameMain.firstChild) {
-                gameMain.removeChild(gameMain.firstChild)
-            };
-            while (game1.firstChild) {
-                game1.removeChild(game1.firstChild)
-            };
-            while (game2.firstChild) {
-                game2.removeChild(game2.firstChild)
-            };
-            document.getElementById("btn1").setAttribute("onclick", "stopSliding(1, true)");
-            document.getElementById("btn3").setAttribute("onclick", "stopSliding(1, false)");
-            mode1 = isMode1;
-            slideWidth = 400;
-            topBlockWidth = 0;
-            pyramide = [];
-            mainBlock_L = document.createElement("div");
-            mainBlock_R = document.createElement("div");
-            __settings();
-            btnSwap(false);
-            renew(true);
-            mainBlock_L.addEventListener("animationiteration", () => {
-                currentBlockWidth_L = generate(mainBlock_L, false, "game1");
-                resetAnimation(mainBlock_L);
-            });
-            mainBlock_R.addEventListener("animationiteration", () => {
-                currentBlockWidth_R = generate(mainBlock_R, false, "game2");
-                resetAnimation(mainBlock_R);
-                //console.log(windowWidth);
-                //console.log(windowHeight);
-                //console.log(blockWidthCoeff);
-                //console.log(pyramide);
-            });
-        }
 
-        function renew(isFirst = false) {
-            currentBlockWidth_L = generate(mainBlock_L, isFirst, "game1");
-            currentBlockWidth_R = generate(mainBlock_R, isFirst, "game2");
-            resetAnimation(mainBlock_L);
-            resetAnimation(mainBlock_R);
-        }
 
-        function btnSwap(isChoosingMode) {
-            if (isChoosingMode) {
-                document.getElementById("btn1").setAttribute("onclick", "startNewGame(true)");
-                document.getElementById("btn3").setAttribute("onclick", "startNewGame(false)");
-                document.getElementById("btn1").firstChild.data = "Mode 1";
-                document.getElementById("btn3").firstChild.data = "Mode 2";
-            } else {
-                document.getElementById("btn1").setAttribute("onclick", "stopSliding(1, true)");
-                document.getElementById("btn3").setAttribute("onclick", "stopSliding(1, false)");
-                document.getElementById("btn1").firstChild.data = "←";
-                document.getElementById("btn3").firstChild.data = "→";
+
+        function clearTag(tag) {
+            while (tag.firstChild) {
+                tag.removeChild(tag.firstChild);
             }
         }
+
+
+
+
+
 
         function __settings(colorBased = false) {
             document.documentElement.style.setProperty("--speed", speed + "ms");
 
-            document.getElementById("gameMain").style.flexDirection = mode1 ? "column-reverse" : "row";
-            document.getElementById("gameMain").style.alignItems = mode1 ? "center" : "flex-end";
-            document.getElementById("gameMain").style.justifyContent = mode1 ? "flex-start" : "center";
+            gameMainWindow.style.flexDirection = mode1 ? "column-reverse" : "row";
+            gameMainWindow.style.alignItems = mode1 ? "center" : "flex-end";
+            gameMainWindow.style.justifyContent = mode1 ? "flex-start" : "center";
         }
 
         function resetAnimation(block) {
@@ -254,7 +669,6 @@
             block.style.animation = null;
             block.style["animation-duration"] = speed + getRandom(0, 500) + "ms";
         }
-
     </script>
 </main>
 

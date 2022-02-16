@@ -11,6 +11,8 @@ var counter = 2;
 var sliderNumber = 2;
 var btn = document.getElementById("btn");
 var counterSpan = document.getElementById("counter");
+var = jjd
+
 
 function stopSliding(sliderMoving, sliderAbove, sliderB4){
     var sliderMoving = document.getElementById(sliderMoving);
@@ -26,7 +28,6 @@ function stopSliding(sliderMoving, sliderAbove, sliderB4){
     let leftB4 = parseFloat(window.getComputedStyle(sliderB4).getPropertyValue("left"));
     let difference = left - leftB4;
     let absDifference = Math.abs(difference);
-
 
     if(difference>width||difference<-width){
         btn.setAttribute("onclick", "");
