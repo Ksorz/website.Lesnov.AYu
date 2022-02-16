@@ -89,7 +89,7 @@
         const game2Window = document.getElementById("game2");
         const colorBtn = document.getElementById("toggle");
         const isColorBased = document.getElementById("cb");
-        const test_ = document.getElementById("myMostBrilliantPyramide");
+        // const test_ = document.getElementById("myMostBrilliantPyramide");
 
         var windowWidth = window.innerWidth;
         var windowHeight = window.innerHeight;
@@ -104,8 +104,8 @@
         var mainBlock_L;
         var mainBlock_R;
         var chosenColor;
-        var myMostBrilliantPyramide = "";
-        var myMostBrilliantPyramideStyle = "";
+        // var myMostBrilliantPyramide = "";
+        // var myMostBrilliantPyramideStyle = "";
 
         var tempGameMainWindow;
         var tempGameMainWindowStyle;
@@ -317,8 +317,8 @@
 
         function logOut() {
             var startMessage = "New game";
-            myMostBrilliantPyramide = "";
-            myMostBrilliantPyramideStyle = "";
+            // myMostBrilliantPyramide = "";
+            // myMostBrilliantPyramideStyle = "";
             gameMainWindow.style.alignItems = "center";
             gameMainWindow.style.justifyContent = "center";
             gameMainWindow.innerHTML = logOutData;
@@ -330,9 +330,18 @@
             btn2.firstChild.data = "START!";
             renewData();
             clearTag(difficultyList);
+            clearTag(game1Window);
+            clearTag(game2Window);
+            setButtons(3);
+            btn4.style.display = "block";
+            colorBtn.style.display = "none";
+            currentResult.firstChild.data = 0;
             btn1.setAttribute('disabled', true);
             let input = document.getElementById("myInput");
             btn2.setAttribute('disabled', true);
+            btn3.setAttribute('disabled', true);
+            btn4.setAttribute('disabled', true);
+            btn5.setAttribute('disabled', true);
             input.addEventListener("input", function (e) {
                 if (input.value.trim().length == 0) {
                     btn2.setAttribute('disabled', true);
@@ -354,8 +363,8 @@
                 "playerLevel": playerLevel,
                 "maximumPoints": maximumPoints,
                 "difficulty": difficulty,
-                "myMostBrillianPyramide": myMostBrilliantPyramide,
-                "myMostBrilliantPyramideStyle": myMostBrilliantPyramideStyle,
+                // "myMostBrillianPyramide": myMostBrilliantPyramide,
+                // "myMostBrilliantPyramideStyle": myMostBrilliantPyramideStyle,
             }
             localStorage.setItem(name, JSON.stringify(json));
         }
@@ -366,8 +375,8 @@
                 playerLevel = json.playerLevel;
                 maximumPoints = json.maximumPoints;
                 difficulty = json.difficulty;
-                myMostBrilliantPyramide = json.myMostBrilliantPyramide;
-                myMostBrilliantPyramideStyle = json.myMostBrilliantPyramideStyle;
+                // myMostBrilliantPyramide = json.myMostBrilliantPyramide;
+                // myMostBrilliantPyramideStyle = json.myMostBrilliantPyramideStyle;
                 return true;
             } else {
                 return false;
@@ -527,10 +536,10 @@
                 countPoints(chosenBlockWidth);
                 console.log(currentPoints);
                 console.log(maximumPoints);
-                if (currentPoints > maximumPoints) {
-                    myMostBrilliantPyramide = gameMainWindow.innerHTML;
-                    myMostBrilliantPyramideStyle = gameMainWindow.style;
-                }
+                // if (currentPoints > maximumPoints) {
+                //     myMostBrilliantPyramide = gameMainWindow.innerHTML;
+                //     myMostBrilliantPyramideStyle = gameMainWindow.style;
+                // }
             } else {
                 sayGameOver("Game over");
             }
@@ -569,10 +578,10 @@
                 }
 
             }
-            if (currentPoints > maximumPoints) {
-                myMostBrilliantPyramide = gameMainWindow.innerHTML;
-                myMostBrilliantPyramideStyle = gameMainWindow.style;
-            }
+            // if (currentPoints > maximumPoints) {
+            //     myMostBrilliantPyramide = gameMainWindow.innerHTML;
+            //     myMostBrilliantPyramideStyle = gameMainWindow.style;
+            // }
             countPoints(chosenBlockWidth);
         }
 
