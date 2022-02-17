@@ -95,9 +95,10 @@ nav li:hover ul {
 
     display: flex;
     flex-direction: row;
+    /* border: 1px solid rgb(32, 186, 64); */
 
     width: 50%;
-    height: 4rem;
+    height: 10vh;
 }
 
 .noteBox {
@@ -105,7 +106,7 @@ nav li:hover ul {
     display: flex;
     flex-direction: column;
     width: 25%;
-    height: 3.6rem;
+    height: 10vh;
     justify-content: center;
     align-items: center;
     /* border: 1px solid rgb(32, 186, 64); */
@@ -222,6 +223,7 @@ nav li:hover ul {
     font-weight: bold;
     font-style: italic;
     padding: 2%;
+    height: 0vh;
 
     /* border: 1px solid rgb(39, 25, 122); */
 }
